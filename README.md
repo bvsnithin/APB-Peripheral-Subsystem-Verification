@@ -36,3 +36,94 @@ Here is a simple analogy used to design this testbench:
 **If the restaurant survives the chaos and delivers the right pizza, the design passes.**
 
 ---
+
+## 📁 Directory Structure
+
+This project is organized as follows:
+
+```
+APB-Peripheral-Subsystem-Verification/
+├── README.md                    # Main project documentation
+├── setupX.bash                  # Setup script for TAMU students
+├── doc/                         # Detailed documentation
+│   ├── README.md               # Documentation index
+│   └── [Additional docs]       # Protocol specs, architecture docs, etc.
+├── design/                      # RTL Design files
+│   └── [Verilog/SystemVerilog HDL]
+├── tb/                          # UVM Testbench
+│   ├── agents/                 # UVM Agents (UART, SPI, I2C)
+│   ├── env/                    # UVM Environment configuration
+│   ├── interfaces/             # SystemVerilog Interfaces
+│   ├── sequences/              # Test sequences and stimulus
+│   ├── tests/                  # Test cases
+│   └── top/                    # Top-level testbench module
+└── sim/                         # Simulation directory
+    ├── file_list.f            # List of files to compile
+    └── run.f                   # Simulation run commands
+```
+
+### Directory Descriptions
+
+- **`doc/`** - Contains comprehensive documentation including protocol specifications, architecture diagrams, and verification plans. Start here for detailed information.
+- **`design/`** - RTL design files for the APB peripheral subsystem (UART, SPI, I2C controllers).
+- **`tb/`** - Complete UVM-based verification environment:
+  - **`agents/`** - Reusable UVM agents for each peripheral protocol
+  - **`env/`** - Environment configuration, scoreboards, and coverage
+  - **`interfaces/`** - SystemVerilog interfaces for protocol transactions
+  - **`sequences/`** - Pre-defined and random stimulus sequences
+  - **`tests/`** - Specific test cases for different verification scenarios
+  - **`top/`** - Top-level testbench hierarchy
+- **`sim/`** - Simulation artifacts and configuration files
+
+---
+
+## 📚 Documentation
+
+For detailed documentation on various aspects of this project, visit the **[`doc/`](doc/)** folder which contains:
+- Protocol specifications and standards
+- Architecture and design documentation
+- Verification methodology and coverage plans
+- Troubleshooting guides
+
+---
+
+## 🚀 How to Run the Project
+
+### For Texas A&M Students
+
+If you are a **Texas A&M student** with access to the ECEN Linux servers, follow these steps:
+
+1. **Clone the repository** on the ECEN Linux server:
+   ```bash
+   git clone <repository-url>
+   cd APB-Peripheral-Subsystem-Verification
+   ```
+
+2. **Load the CSCE-616 environment**:
+   ```bash
+   load-csce-616
+   ```
+   This command sets up all necessary EDA tools, compilers, and simulators for the project.
+
+3. **Run the setup script**:
+   ```bash
+   bash setupX.bash
+   ```
+   This script configures the environment and prepares the project for simulation.
+
+4. **Navigate to the simulation directory and run the testbench**:
+   ```bash
+   cd sim
+   xrun -f run.f
+   ```
+   This command compiles and runs the complete verification environment using the xrun simulator.
+
+### For Other Users
+
+If you are not on the TAMU ECEN server, you will need to:
+- Install a compatible SystemVerilog simulator (e.g., Cadence Xcelium, Mentor Questa, or an open-source alternative)
+- Ensure UVM libraries are properly configured
+- Modify the simulation scripts as needed for your environment
+- Run: `xrun -f sim/run.f` (or equivalent command for your simulator)
+
+---
