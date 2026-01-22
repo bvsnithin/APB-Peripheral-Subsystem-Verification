@@ -46,20 +46,19 @@ APB-Peripheral-Subsystem-Verification/
 ├── README.md                    # Main project documentation
 ├── setupX.bash                  # Setup script for TAMU students
 ├── doc/                         # Detailed documentation
-│   ├── README.md               # Documentation index
-│   └── [Additional docs]       # Protocol specs, architecture docs, etc.
+│   └── [Additional docs]        # Protocol specs, architecture docs, etc.
 ├── design/                      # RTL Design files
-│   └── [Verilog/SystemVerilog HDL]
+│   └── [SystemVerilog HDL]
 ├── tb/                          # UVM Testbench
-│   ├── agents/                 # UVM Agents (UART, SPI, I2C)
-│   ├── env/                    # UVM Environment configuration
-│   ├── interfaces/             # SystemVerilog Interfaces
-│   ├── sequences/              # Test sequences and stimulus
-│   ├── tests/                  # Test cases
-│   └── top/                    # Top-level testbench module
+│   ├── agents/                  # UVM Agents (UART, SPI, I2C)
+│   ├── env/                     # UVM Environment configuration
+│   ├── interfaces/              # SystemVerilog Interfaces
+│   ├── sequences/               # Test sequences and stimulus
+│   ├── tests/                   # Test cases
+│   └── top/                     # Top-level testbench module
 └── sim/                         # Simulation directory
-    ├── file_list.f            # List of files to compile
-    └── run.f                   # Simulation run commands
+    ├── file_list.f              # List of files to compile
+    └── run.f                    # Simulation run commands
 ```
 
 ### Directory Descriptions
@@ -79,11 +78,7 @@ APB-Peripheral-Subsystem-Verification/
 
 ## 📚 Documentation
 
-For detailed documentation on various aspects of this project, visit the **[`doc/`](doc/)** folder which contains:
-- Protocol specifications and standards
-- Architecture and design documentation
-- Verification methodology and coverage plans
-- Troubleshooting guides
+For detailed documentation on various aspects of this project, visit the **[`doc/`](doc/)** folder.
 
 ---
 
