@@ -43,7 +43,7 @@ class apb_driver extends uvm_driver #(apb_seq_item);
     // 2. ACCESS PHASE: 
     // Wait one clock cycle, then set penable = 1.
     @(posedge vif.pclk)
-    penable <= 1;
+    vif.penable <= 1;
     
     
     // 3. WAIT FOR READY:

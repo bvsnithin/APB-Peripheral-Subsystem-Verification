@@ -9,7 +9,7 @@ interface apb_if(input logic pclk, input logic presetn);
   logic        pready;
   
   modport driver (
-    input  pclk, presetn, 
+    input  pclk, presetn, prdata, pready,
     output paddr, psel, penable, pwrite, pwdata
   );
 

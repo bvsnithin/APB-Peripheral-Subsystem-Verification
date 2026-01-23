@@ -5,7 +5,7 @@ This documentation provides a simple overview of the components used in our **AP
 It is organized into two main sections:
 
 ## 1. AMBA and APB Overview
-**Read more:** [AMBA & APD](/doc/amba_apd_overview.md)
+**Read more:** [AMBA & APB](/doc/amba_apd_overview.md)
 
 ## 2. Serial Communication Protocols Overview
 **Read more:** [I2C, SPI, UART](/doc/peripheral_controllers.md)

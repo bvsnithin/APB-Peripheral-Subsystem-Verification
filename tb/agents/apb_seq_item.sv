@@ -27,11 +27,11 @@ package apb_pkg;
     // 2. Address range: Limit the address to a realistic range (e.g., 0 to 0xFFF).
     
     constraint addr_alignment_c {
-      addr % 4 ==0
+      paddr % 4 ==0
     }
 
     constraint addr_range_c {
-        addr inside {[0:4095]};
+        paddr inside {[0:1023]};
     }
 
   endclass
