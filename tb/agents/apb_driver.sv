@@ -31,32 +31,26 @@ class apb_driver extends uvm_driver #(apb_seq_item);
   endtask
 
   task drive_transfer(apb_seq_item item);
-
-    // 1. SETUP PHASE: 
-    // Drive paddr, pwdata, pwrite from item. Drive psel = 1.
+    // 1. SETUP PHASE
     @ (posedge vif.pclk);
     vif.paddr  <= item.paddr;
     vif.pwrite <= item.pwrite;
     vif.psel   <= 1;
     if (item.pwrite) vif.pwdata <= item.pwdata;
 
-    // 2. ACCESS PHASE: 
-    // Wait one clock cycle, then set penable = 1.
-    @(posedge vif.pclk)
+    // 2. ACCESS PHASE
+    @ (posedge vif.pclk);
     vif.penable <= 1;
     
-    
-    // 3. WAIT FOR READY:
-    // Wait until vif.pready is high while clocking.
-    while(!vif.pready) @(posedge vif.pclk);
+    // 3. WAIT FOR READY
+    // We stay in this loop until we see a clock edge where pready is HIGH
+    do begin
+        @ (posedge vif.pclk); 
+    end while (vif.pready == 0);
 
-
-    // 4. TEARDOWN:
-    // Clear psel and penable.
-    @ (posedge vif.pclk);
+    // 4. TEARDOWN
     vif.psel    <= 0;
     vif.penable <= 0;
-    
   endtask
 
 endclass

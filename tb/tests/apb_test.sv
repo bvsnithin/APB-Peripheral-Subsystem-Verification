@@ -2,6 +2,7 @@ class apb_test extends uvm_test;
   `uvm_component_utils(apb_test)
 
   apb_env env;
+  apb_base_seq seq; // Handle for the sequence
 
   function new(string name, uvm_component parent);
     super.new(name, parent);
@@ -10,17 +11,23 @@ class apb_test extends uvm_test;
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     env = apb_env::type_id::create("env", this);
+  endfunction
 
+  task run_phase(uvm_phase phase);
+    // 1. Raise Objection (Keep the simulation alive)
+    phase.raise_objection(this);
     
-    // Tell the Sequencer (env.agt.seqr) to run 'apb_base_seq' during the run_phase.
-    uvm_config_db#(uvm_object_wrapper)::set(this, 
-                                            "env.agt.seqr.run_phase", 
-                                            "default_sequence", 
-                                            apb_base_seq::type_id::get());
-  endfunction
+    // 2. Create and Start the Sequence
+    seq = apb_base_seq::type_id::create("seq");
+    `uvm_info("TEST", "Starting Sequence...", UVM_LOW)
+    
+    // Pass the sequencer handle (env.agt.seqr)
+    seq.start(env.agt.seqr);
+    
+    `uvm_info("TEST", "Sequence Finished!", UVM_LOW)
 
-  function void end_of_elaboration_phase(uvm_phase phase);
-    uvm_top.print_topology();
-  endfunction
+    // 3. Drop Objection (End the simulation)
+    phase.drop_objection(this);
+  endtask
 
 endclass

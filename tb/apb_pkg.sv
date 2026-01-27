@@ -13,7 +13,9 @@ package apb_pkg;
   `include "agents/apb_agent.sv"
 
   // 3. ENVIRONMENT (depends on agent)
+  `include "env/apb_scoreboard.sv"
   `include "env/apb_env.sv"
+  
 
   // 4. SEQUENCES (depend on seq_item)
   `include "sequences/apb_base_seq.sv"

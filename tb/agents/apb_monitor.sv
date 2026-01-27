@@ -1,7 +1,7 @@
 
 class apb_monitor extends uvm_monitor;
 
-    `uvm_component_utils(apb_monitor);
+    `uvm_component_utils(apb_monitor)
 
     virtual apb_if vif;
 
@@ -21,13 +21,26 @@ class apb_monitor extends uvm_monitor;
     endfunction: build_phase
 
     task run_phase(uvm_phase phase);
+
+        `uvm_info("MON", "Monitor run_phase started", UVM_LOW)
+
         forever begin
             @(posedge vif.pclk);
             if(vif.psel && vif.penable && vif.pready) begin
+                `uvm_info("MON", "Transaction Captured!", UVM_LOW)
+
                 trans_collected = apb_seq_item::type_id::create("trans_collected");
                 trans_collected.paddr = vif.paddr;
                 trans_collected.pwrite = vif.pwrite;
-                trans_collected.pwdata = vif.pwdata;
+
+                if (vif.pwrite) begin
+                    // Write Operation: Capture pwdata
+                    trans_collected.pwdata = vif.pwdata;
+                end else begin
+                    // Read Operation: Capture prdata
+                    trans_collected.prdata = vif.prdata; 
+                end
+                
                 item_collected_port.write(trans_collected);
             end
 

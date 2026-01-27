@@ -41,4 +41,16 @@ module top;
     run_test("apb_test");
   end
 
+  // DEBUG: Monitor the DUT Memory Backdoor
+  // This triggers whenever the memory at address 0x10 (decimal 16) changes.
+  always @(dut.mem[16]) begin
+    $display("[TOP DEBUG] Memory[0x10] updated to: 0x%h", dut.mem[16]);
+  end
+
+  // DEBUG: Monitor the Bus
+  always @(posedge pclk) begin
+    if (vif.psel && vif.penable && vif.pready)
+      $display("[TOP DEBUG] Bus Trans: Addr=0x%h Write=%b Data=0x%h", vif.paddr, vif.pwrite, vif.pwdata);
+  end
+
 endmodule
