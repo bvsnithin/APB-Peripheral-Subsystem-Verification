@@ -1,7 +1,7 @@
 
 class apb_monitor extends uvm_monitor;
 
-    `uvm_component_utils("apb_monitor");
+    `uvm_component_utils(apb_monitor);
 
     virtual apb_if vif;
 
