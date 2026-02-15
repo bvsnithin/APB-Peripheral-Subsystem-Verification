@@ -1,25 +1,46 @@
-module top;
-  import uvm_pkg::*;
-  import apb_pkg::*; 
+//-----------------------------------------------------------------------------
+// File: top.sv
+// Description: Testbench Top Module
+//              Instantiates DUT, interface, clock/reset generation,
+//              and starts UVM test.
+//-----------------------------------------------------------------------------
 
+module top;
+
+  // Import UVM and testbench package
+  import uvm_pkg::*;
+  import apb_pkg::*;
+
+  //-------------------------------------------------------------------------
+  // Clock and Reset Signals
+  //-------------------------------------------------------------------------
   logic pclk;
   logic presetn;
 
-  // 1. Clock and Reset Generation
+  //-------------------------------------------------------------------------
+  // Clock Generation: 100MHz (10ns period)
+  //-------------------------------------------------------------------------
   initial begin
     pclk = 0;
-    forever #5 pclk = ~pclk; // 100MHz clock
+    forever #5 pclk = ~pclk;
   end
 
+  //-------------------------------------------------------------------------
+  // Reset Generation: Active low, released after 20ns
+  //-------------------------------------------------------------------------
   initial begin
     presetn = 0;
-    #20 presetn = 1; // Release reset after 20ns
+    #20 presetn = 1;
   end
 
-  // 2. Interface Instance
+  //-------------------------------------------------------------------------
+  // APB Interface Instance
+  //-------------------------------------------------------------------------
   apb_if vif(pclk, presetn);
 
-  // 3. DUT Instance (APB RAM)
+  //-------------------------------------------------------------------------
+  // DUT Instance: APB RAM
+  //-------------------------------------------------------------------------
   apb_ram dut (
     .pclk    (vif.pclk),
     .presetn (vif.presetn),
@@ -32,25 +53,31 @@ module top;
     .pready  (vif.pready)
   );
 
-  // 4. Start UVM
+  //-------------------------------------------------------------------------
+  // UVM Test Start
+  //-------------------------------------------------------------------------
   initial begin
-    // Pass Interface to UVM
+    // Register virtual interface in config_db for UVM components
     uvm_config_db#(virtual apb_if)::set(null, "*", "vif", vif);
-    
-    // Run the Test
+
+    // Start the UVM test (test name can be overridden via +UVM_TESTNAME)
     run_test("apb_test");
   end
 
-  // DEBUG: Monitor the DUT Memory Backdoor
-  // This triggers whenever the memory at address 0x10 (decimal 16) changes.
+  //-------------------------------------------------------------------------
+  // Optional Debug Monitors (can be disabled in production)
+  //-------------------------------------------------------------------------
+
+  // Monitor memory writes at address 0x10 (for debug)
   always @(dut.mem[16]) begin
     $display("[TOP DEBUG] Memory[0x10] updated to: 0x%h", dut.mem[16]);
   end
 
-  // DEBUG: Monitor the Bus
+  // Monitor completed bus transactions (for debug)
   always @(posedge pclk) begin
     if (vif.psel && vif.penable && vif.pready)
-      $display("[TOP DEBUG] Bus Trans: Addr=0x%h Write=%b Data=0x%h", vif.paddr, vif.pwrite, vif.pwdata);
+      $display("[TOP DEBUG] Bus Trans: Addr=0x%h Write=%b Data=0x%h",
+               vif.paddr, vif.pwrite, vif.pwrite ? vif.pwdata : vif.prdata);
   end
 
-endmodule
+endmodule: top

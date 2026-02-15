@@ -1,18 +1,17 @@
 //-----------------------------------------------------------------------------
-// File: apb_test.sv
-// Description: APB Base Test
-//              Basic test that runs the base sequence (single write-read).
-//              Other tests can extend this or follow the same pattern.
+// File: apb_wr_rd_test.sv
+// Description: Test that performs multiple write-read operations to verify
+//              APB RAM data integrity. Uses write-read sequence pairs.
 //-----------------------------------------------------------------------------
 
-class apb_test extends uvm_test;
-  `uvm_component_utils(apb_test)
+class apb_wr_rd_test extends uvm_test;
+  `uvm_component_utils(apb_wr_rd_test)
 
   //-------------------------------------------------------------------------
   // Component Handles
   //-------------------------------------------------------------------------
-  apb_env      env;  // Environment instance
-  apb_base_seq seq;  // Sequence to run
+  apb_env env;                  // Environment instance
+  apb_wr_rd_seq wr_rd_seq;      // Write-read sequence
 
   //-------------------------------------------------------------------------
   // Constructor
@@ -32,7 +31,7 @@ class apb_test extends uvm_test;
 
   //-------------------------------------------------------------------------
   // End of Elaboration Phase
-  // Print UVM component hierarchy for debug
+  // Print the UVM topology for debug visibility
   //-------------------------------------------------------------------------
   function void end_of_elaboration_phase(uvm_phase phase);
     super.end_of_elaboration_phase(phase);
@@ -44,17 +43,21 @@ class apb_test extends uvm_test;
   // Execute the test sequence
   //-------------------------------------------------------------------------
   task run_phase(uvm_phase phase);
-    // Raise objection to keep simulation running
+    // Raise objection to keep simulation alive
     phase.raise_objection(this);
 
-    // Create the sequence
-    seq = apb_base_seq::type_id::create("seq");
-    `uvm_info("TEST", "=== APB Base Test Starting ===", UVM_LOW)
+    `uvm_info("TEST", "=== APB Write-Read Test Starting ===", UVM_LOW)
+
+    // Create the write-read sequence
+    wr_rd_seq = apb_wr_rd_seq::type_id::create("wr_rd_seq");
+
+    // Configure for 10 write-read pairs
+    wr_rd_seq.num_pairs = 10;
 
     // Start the sequence on the agent's sequencer
-    seq.start(env.agt.seqr);
+    wr_rd_seq.start(env.agt.seqr);
 
-    `uvm_info("TEST", "=== APB Base Test Completed ===", UVM_LOW)
+    `uvm_info("TEST", "=== APB Write-Read Test Completed ===", UVM_LOW)
 
     // Small delay before ending
     #100;
@@ -63,4 +66,4 @@ class apb_test extends uvm_test;
     phase.drop_objection(this);
   endtask: run_phase
 
-endclass: apb_test
+endclass: apb_wr_rd_test

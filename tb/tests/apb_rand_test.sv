@@ -1,18 +1,17 @@
 //-----------------------------------------------------------------------------
-// File: apb_test.sv
-// Description: APB Base Test
-//              Basic test that runs the base sequence (single write-read).
-//              Other tests can extend this or follow the same pattern.
+// File: apb_rand_test.sv
+// Description: Test that runs random APB transactions for stress testing.
+//              Helps find corner cases through randomization.
 //-----------------------------------------------------------------------------
 
-class apb_test extends uvm_test;
-  `uvm_component_utils(apb_test)
+class apb_rand_test extends uvm_test;
+  `uvm_component_utils(apb_rand_test)
 
   //-------------------------------------------------------------------------
   // Component Handles
   //-------------------------------------------------------------------------
-  apb_env      env;  // Environment instance
-  apb_base_seq seq;  // Sequence to run
+  apb_env env;                  // Environment instance
+  apb_rand_seq rand_seq;        // Random sequence
 
   //-------------------------------------------------------------------------
   // Constructor
@@ -23,7 +22,6 @@ class apb_test extends uvm_test;
 
   //-------------------------------------------------------------------------
   // Build Phase
-  // Create the environment
   //-------------------------------------------------------------------------
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
@@ -32,7 +30,6 @@ class apb_test extends uvm_test;
 
   //-------------------------------------------------------------------------
   // End of Elaboration Phase
-  // Print UVM component hierarchy for debug
   //-------------------------------------------------------------------------
   function void end_of_elaboration_phase(uvm_phase phase);
     super.end_of_elaboration_phase(phase);
@@ -41,26 +38,23 @@ class apb_test extends uvm_test;
 
   //-------------------------------------------------------------------------
   // Run Phase
-  // Execute the test sequence
   //-------------------------------------------------------------------------
   task run_phase(uvm_phase phase);
-    // Raise objection to keep simulation running
     phase.raise_objection(this);
 
-    // Create the sequence
-    seq = apb_base_seq::type_id::create("seq");
-    `uvm_info("TEST", "=== APB Base Test Starting ===", UVM_LOW)
+    `uvm_info("TEST", "=== APB Random Test Starting ===", UVM_LOW)
 
-    // Start the sequence on the agent's sequencer
-    seq.start(env.agt.seqr);
+    // Create and configure random sequence
+    rand_seq = apb_rand_seq::type_id::create("rand_seq");
+    rand_seq.num_transactions = 20;  // Run 20 random transactions
 
-    `uvm_info("TEST", "=== APB Base Test Completed ===", UVM_LOW)
+    // Execute sequence
+    rand_seq.start(env.agt.seqr);
 
-    // Small delay before ending
+    `uvm_info("TEST", "=== APB Random Test Completed ===", UVM_LOW)
+
     #100;
-
-    // Drop objection to end simulation
     phase.drop_objection(this);
   endtask: run_phase
 
-endclass: apb_test
+endclass: apb_rand_test
